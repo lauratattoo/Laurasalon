@@ -28,13 +28,15 @@ npm start
 
 Otevři `http://localhost:3000`; administrace je `/admin`. Ukázkový režim je viditelně označený a neposílá e-maily.
 
-## Render
+## Bezplatné nasazení — čeká na připojení databáze
 
-`render.yaml` vytváří **novou** Node Web Service `laurasalon-server`, plán Starter, s persistentním diskem o velikosti 1 GB. Instance i disk jsou placené prostředky Renderu. Konfigurace používá kořen repozitáře, `npm ci --omit=dev` a `npm start`. `ADMIN_PASSWORD` a `SESSION_SECRET` generuje Render; heslo pro Lauru je dostupné vlastníkovi účtu v Environment této nové služby.
+Rozpočet uživatele je 0 Kč. Placené Blueprinty byly odstraněny; žádný nový placený server ani disk nebyl vytvořen.
 
-Původní Static Site se nepřevádí pouhou úpravou env proměnných. Neodstraňuj ji před ověřením nové služby. Po nasazení a ověření nové URL lze z původního statického webu nastavit přesměrování na novou službu. Původní adresa `tattoowebside.onrender.com` není automaticky přenesena na novou službu.
+Cílová varianta je Render Free a externí Supabase Free pro rezervace a obrázky. Supabase zatím není připojená a adaptace ukládání na tuto databázi není dokončená. Současný server používá místní SQLite a nesmí být spuštěn na dočasném disku Render Free pro skutečné rezervace.
 
-`render.production.yaml` obsahuje stejnou konfiguraci pro ruční použití. Nasazuj jen jeden z těchto souborů, nevytvářej dvě služby.
+Původní Static Site zůstává dostupná. Nová bezplatná Web Service bude vytvořena až po implementaci a ověření trvalého ukládání mimo Render. Nepřepínej pouze plán na Free a netvrď PERSISTENT_STORAGE=true bez skutečného trvalého úložiště.
+
+Render Free může po nečinnosti usnout. Supabase Free má kapacitní limity a může se při nečinnosti pozastavit. Použij výhradně bezplatné tarify; nepovoluj placené upgrady nebo spotřebu nad limity.
 
 ## Rezervace a e-maily
 
