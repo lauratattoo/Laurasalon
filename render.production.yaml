@@ -1,19 +1,22 @@
-# Optional paid production configuration. Apply to the existing Render service.
+# Deploy this repository as a NEW Node Web Service, not a Static Site.
+# The Starter instance and persistent disk are paid Render resources.
 services:
   - type: web
-    name: salon-tattoo-laura
+    name: laurasalon-server
     runtime: node
     plan: starter
-    buildCommand: npm ci
+    buildCommand: npm ci --omit=dev
     startCommand: npm start
     healthCheckPath: /api/health
     disk:
-      name: salon-data
+      name: laura-reservations
       mountPath: /var/data
       sizeGB: 1
     envVars:
       - key: NODE_VERSION
         value: 24
+      - key: NODE_ENV
+        value: production
       - key: DATA_DIR
         value: /var/data
       - key: PERSISTENT_STORAGE
@@ -21,14 +24,8 @@ services:
       - key: APP_MODE
         value: live
       - key: ADMIN_PASSWORD
-        sync: false
+        generateValue: true
       - key: SESSION_SECRET
         generateValue: true
-      - key: PUBLIC_URL
-        value: https://tattoowebside.onrender.com
       - key: SALON_EMAIL
         value: Tattoolaura@seznam.cz
-      - key: EMAIL_FROM
-        sync: false
-      - key: RESEND_API_KEY
-        sync: false

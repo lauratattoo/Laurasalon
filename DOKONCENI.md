@@ -1,19 +1,25 @@
-# Laura — aktualizace webu
+# Stav přípravy a nasazení
 
-## Co je připravené
-- Administrace `/admin`: zakázky, potvrzení poptávek, blokace, úpravy, galerie, texty a otevírací doba.
-- Časová osa 08:00–20:00 v Europe/Prague. Ukazatel se mění každou sekundu, data ze serveru každých 15 sekund. Ve 13:00–16:00 probíhá rezervace; v 16:00 je dokončená. Další obsazenost a otevírací doba určují dostupnost.
-- Nastavení vzhledu: růže / champagne / šalvěj, vypnutí animací. Respektuje také systémové omezení pohybu.
-- Jména a poznámky zákazníků nejsou ve veřejném kalendáři.
+Zdrojový repozitář: https://github.com/lauratattoo/Laurasalon
+Původní Static Site: https://tattoowebside.onrender.com
+Render ID: srv-dbgub6ks728c73cd12og
 
-## Nasazení na existující Render
-1. Zálohujte současnou databázi salon.sqlite včetně obrázků. Export JSON v administraci neobsahuje obrázky. Před restartem či změnou plánu zachraňte data z původního dočasného disku.
-2. Nahrajte obsah této složky do současného GitHub repozitáře. Nepřepisujte vlastní tajné proměnné.
-3. Pro skutečný provoz připojte persistentní disk `/var/data` a nastavte DATA_DIR=/var/data. Připravený `render.production.yaml` je vzor placené konfigurace; nebyl automaticky aplikován. Původní render.yaml zůstává ukázkový.
-4. Nastavte ADMIN_PASSWORD (minimálně 12 znaků), SESSION_SECRET (32+ náhodných znaků), PERSISTENT_STORAGE=true a PUBLIC_URL=https://tattoowebside.onrender.com.
-5. Pro e-maily nastavte RESEND_API_KEY, EMAIL_FROM z ověřené domény a SALON_EMAIL. Potom APP_MODE=live. Bez těchto hodnot ostrý režim záměrně nenastartuje.
-6. Spusťte deploy a otevřete /admin. Laura nastaví skutečnou otevírací dobu, kontakty a fotografie. Stávající nastavení v databázi zůstává zachované; 8–20 je výchozí otevírací doba pouze u nové databáze.
-7. Ověřte skutečné doručení e-mailu a jednu rezervaci v druhém okně. Obrázky z dodaného ZIPu jsou označené vizualizace; nahraďte je vlastními realizacemi.
+## Ověřený problém původní služby
 
-## Ověření
-`npm run check` a `npm test` (Node 24). Testy ověřují přihlášení, soukromí, kolize, změny stavů, persistenci a časové hranice 08:00, 13:00, 16:00, 20:00. Vizuální kontrola v prohlížeči ani skutečné e-mailové doručení v tomto prostředí neproběhly.
+30. 10. 2026 veřejné HTML, app.js a style.css odpovídaly dříve dodanému ZIPu. `/api/public` i `/api/health` vracely HTTP 404. Uživatel potvrdil typ Static Site. Proto nefunguje kalendář a přihlášení, přestože soubory aplikace už jsou nahrané.
+
+## Připravená oprava
+
+V tomto balíčku je upravený vzhled a animace, funkční server, okamžité přenášení změn, testy rozhraní a konfigurace Node Web Service s trvalým diskem. Podrobnosti jsou v README.md. Žádná služba nebyla tímto balíčkem automaticky vytvořena ani smazána.
+
+## Zbývající nasazení
+
+1. Autorizovat zápis do repozitáře a přístup do Renderu. V prostředí přípravy dosavadní přihlášení ke GitHubu neprošlo; Render účet nebyl připojený.
+2. Nahrát a ověřit změny v repozitáři.
+3. Vytvořit novou Web Service z render.yaml (placený Starter a persistentní disk). Stávající Static Site zatím ponechat.
+4. Ověřit `/api/health`, `/api/public`, přihlášení a uložení zkušební rezervace na nové URL. Zkušební záznam poté odstranit.
+5. Ověřit v prohlížeči desktop i mobil: animace, stav bez spojení a změnu rezervace ve druhém okně.
+6. Po ověření nastavit přesměrování původní Static Site na skutečnou URL nové služby. Přesný postup podle dostupných nastavení Renderu.
+7. Laura si v Environment nové služby vyzvedne vygenerované ADMIN_PASSWORD a v /admin nastaví kontakty, obsah, vlastní fotografie a vzhled.
+
+Automatické e-maily nejsou podmínkou fungování rezervací. Pokud je chcete, je nutná ověřená odesílací doména a připojení e-mailové služby; detaily v README.md.

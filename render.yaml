@@ -1,18 +1,30 @@
+# Deploy this repository as a NEW Node Web Service, not a Static Site.
+# The Starter instance and persistent disk are paid Render resources.
 services:
   - type: web
-    name: salon-tattoo-laura
+    name: laurasalon-server
     runtime: node
-    plan: free
-    buildCommand: npm ci
+    plan: starter
+    buildCommand: npm ci --omit=dev
     startCommand: npm start
     healthCheckPath: /api/health
+    disk:
+      name: laura-reservations
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: NODE_VERSION
         value: 24
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+      - key: PERSISTENT_STORAGE
+        value: 'true'
       - key: APP_MODE
-        value: demo
+        value: live
       - key: ADMIN_PASSWORD
-        sync: false
+        generateValue: true
       - key: SESSION_SECRET
         generateValue: true
       - key: SALON_EMAIL
