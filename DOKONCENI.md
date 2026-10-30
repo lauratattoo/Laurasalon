@@ -1,9 +1,12 @@
-# Stav projektu — rozpočet 0 Kč
+# Nasazení Laura
 
-- Opravy rozhraní, animace, živé změny rezervací a 12 úspěšných testů jsou v repozitáři.
-- Původní služba srv-dbgub6ks728c73cd12og je Static Site. Sama neumí spustit rezervace.
-- Žádná nová placená služba ani disk nebyly vytvořeny.
-- Placené soubory render.yaml a render.production.yaml jsou odstraněné podle nového rozpočtu uživatele.
-- Navržená bezplatná architektura: Render Free + Supabase Free. Vyžaduje připojení Supabase a úpravu současného SQLite ukládání. Tato migrace ještě není implementovaná.
-- Po připojení Supabase ověřit bezplatný tarif, vytvořit databázové schéma a úložiště obrázků, upravit server, otestovat soukromí i kolize a nasadit výhradně bezplatnou službu.
-- Potom ověřit veřejný web, administraci a uložení dat po restartu, připravit přesměrování původní adresy.
+- Rozpočet 0 Kč: Render Free + Supabase Free.
+- Veřejný web https://laurasalonweb.onrender.com, administrace /admin.
+- Původní statický web po aktualizaci přesměruje návštěvníka na novou adresu.
+- Implementované vzdálené ukládání, ochrana proti kolizím, soukromé fotky, živá osa a změny SSE.
+- Nové ovládání s animovaným odleskem a odezvou na dotyk. Respektuje omezení pohybu.
+- Administraci lze přidat na plochu telefonu jako PWA. Offline stránka neslibuje uložení rezervací bez internetu.
+- Automatické e-maily nejsou připojené. Laura potvrzuje zákazníkům návštěvu osobně.
+- Heslo je v ADMIN_PASSWORD v nastavení služby Render; tajné hodnoty nejsou v repozitáři.
+- Integrační test vzdáleného úložiště ověřil rezervace, souběžné kolize, aktualizace, mazání a obrázky. Testovací záznamy byly odstraněny.
+- Zbývá ověření posledního nasazení a vizuální kontrola v prohlížeči. Kontakty a skutečné fotografie doplní Laura.

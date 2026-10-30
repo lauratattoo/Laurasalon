@@ -28,19 +28,27 @@ npm start
 
 Otevři `http://localhost:3000`; administrace je `/admin`. Ukázkový režim je viditelně označený a neposílá e-maily.
 
-## Bezplatné nasazení — čeká na připojení databáze
+## Bezplatné nasazení
 
-Rozpočet uživatele je 0 Kč. Placené Blueprinty byly odstraněny; žádný nový placený server ani disk nebyl vytvořen.
+Produkční Web Service: https://laurasalonweb.onrender.com (Render Free). Supabase projekt `laurasalon` v organizaci `lauratattoo` je na Free. Nejsou vytvořené placené disky ani služby.
 
-Cílová varianta je Render Free a externí Supabase Free pro rezervace a obrázky. Supabase zatím není připojená a adaptace ukládání na tuto databázi není dokončená. Současný server používá místní SQLite a nesmí být spuštěn na dočasném disku Render Free pro skutečné rezervace.
+Server používá `STORAGE_URL` a tajný `STORAGE_SECRET` v Environment Renderu. HTTPS Edge Function ověřuje tajný serverový klíč proti jeho SHA-256 otisku a provádí pouze předem povolené parametrizované dotazy. Skutečný klíč ani Supabase service role nejsou ve veřejném klientovi. Databázové tabulky mají RLS a nemají veřejná oprávnění; přes veřejné API server zveřejňuje pouze časové intervaly.
 
-Původní Static Site zůstává dostupná. Nová bezplatná Web Service bude vytvořena až po implementaci a ověření trvalého ukládání mimo Render. Nepřepínej pouze plán na Free a netvrď PERSISTENT_STORAGE=true bez skutečného trvalého úložiště.
+SQL základ je v `database/schema.sql`; ve vzdálené databázi byl aplikován nástrojem migrací. Časové kolize blokuje PostgreSQL exclusion constraint. Vícekrokové zápisy rezervace a e-mailové fronty se provedou atomicky v jednom RPC volání. Obrázky jsou uložené spolu s daty v PostgreSQL jako base64 a započítávají se do databázové kvóty Free, nikoli do samostatného Storage bucketu.
 
-Render Free může po nečinnosti usnout. Supabase Free má kapacitní limity a může se při nečinnosti pozastavit. Použij výhradně bezplatné tarify; nepovoluj placené upgrady nebo spotřebu nad limity.
+Bez STORAGE_URL aplikace používá lokální SQLite pro vývoj. Lokální SQLite není bezpečné trvalé úložiště pro Render Free. Nový produkční režim musí mít STORAGE_URL a STORAGE_SECRET.
+
+Render Free se může při nečinnosti uspávat a Supabase Free může projekt pozastavit. Automatické placené upgrady nejsou nastavené. Při dosažení bezplatných limitů je potřeba uvolnit místo nebo provoz omezit, ne automaticky přejít na placený tarif.
+
+## Aplikace pro Lauru
+
+Na `/admin` je instalovatelná PWA. Na iPhonu otevři administraci v Safari, zvol Sdílet → Přidat na plochu. Na podporovaném Androidu použij tlačítko Přidat aplikaci na plochu. Nejde o samostatnou aplikaci z App Storu; používá stejný chráněný web.
+
+Service worker ukládá pouze obecnou offline stránku a ikonu. Necachuje API, rezervace, kontakty ani obrázky klientů. Při výpadku sítě nezapisuje rezervace do dočasné offline fronty.
 
 ## Rezervace a e-maily
 
-`APP_MODE=live` vyžaduje trvalé úložiště (`PERSISTENT_STORAGE=true`, `DATA_DIR=/var/data`) a stabilní `SESSION_SECRET`. Samotné nastavení proměnné nepřipojuje disk; ten musí skutečně existovat.
+`APP_MODE=live` vyžaduje vzdálené úložiště (`STORAGE_URL` a `STORAGE_SECRET`) a stabilní `SESSION_SECRET`. Pro alternativní placený disk je zachována kompatibilita s PERSISTENT_STORAGE=true, ale v tomto projektu se nepoužívá.
 
 Automatické e-maily jsou volitelné. Zapnou se, pokud jsou nastavené všechny tři hodnoty `RESEND_API_KEY`, `EMAIL_FROM` z ověřené domény a `SALON_EMAIL`. Nastav také `PUBLIC_URL` na skutečnou URL nové služby, aby odkazy v e-mailech vedly do administrace.
 
